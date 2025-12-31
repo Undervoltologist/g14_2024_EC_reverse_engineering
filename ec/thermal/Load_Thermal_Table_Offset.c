@@ -1,4 +1,9 @@
 
+/* WARNING: Inlined function: thunk_FUN_RAM_01ade4 */
+/* WARNING: Removing unreachable block (RAM,0x012195) */
+/* WARNING: Removing unreachable block (RAM,0x01a4b1) */
+/* WARNING: Unknown calling convention yet parameter storage is locked */
+
 void Load_Thermal_Table_Offset(void)
 
 {
@@ -33,36 +38,36 @@ void Load_Thermal_Table_Offset(void)
   ushort uVar4;
   
   FUN_RAM_01a508(in_R3 + '\x01');
-  DAT_RAM_000b92 = extraout_R7;
+  CBD3 = extraout_R7;
   Read_Table_Data_By_Index(0,0);
-  DAT_RAM_000b93 = extraout_R7_00;
+  CBD4 = extraout_R7_00;
   Read_Table_Data_By_Index(0,0x1c);
-  DAT_RAM_000b94 = extraout_R7_01;
+  CBD5 = extraout_R7_01;
   Read_Table_Data_By_Index(0,0xe4);
-  DAT_RAM_000b95 = extraout_R7_02;
+  CBD6 = extraout_R7_02;
   Read_Table_Data_By_Index(0,0xd8);
-  DAT_RAM_000b96 = extraout_R7_03;
+  CBD7 = extraout_R7_03;
   Read_Table_Data_By_Index(0,0x5c);
   FUN_RAM_01a4f2();
   FUN_RAM_01a4f2();
   FUN_RAM_01a512();
   FUN_RAM_01a512();
-  DAT_RAM_000b9b = extraout_R7_04;
+  GBD4 = extraout_R7_04;
   Read_Table_Data_By_Index(1,0x48);
   cVar1 = extraout_R7_05;
-  DAT_RAM_000b9c = extraout_R7_05;
+  GBD5 = extraout_R7_05;
   Read_Table_Data_By_Index(1,0x10);
   func_0x01a528();
   func_0x01a528();
   func_0x01a540(extraout_R6 - ((char)((0xfb < (byte)(cVar1 + 9U)) << 7) >> 7));
   func_0x01a540();
-  DAT_RAM_00056b = extraout_R7_06;
+  SBD4 = extraout_R7_06;
   Read_Table_Data_By_Index(2,0x3c);
-  DAT_RAM_00056c = extraout_R7_07;
+  SBD5 = extraout_R7_07;
   Read_Table_Data_By_Index(2,0x18);
   FUN_RAM_01a534();
   FUN_RAM_01a534();
-  DAT_RAM_00056f = extraout_R7_08;
+  SBD6 = extraout_R7_08;
   func_0x015e8f(0xff);
   DAT_RAM_000694 = '\t';
   func_0x015e8f();
@@ -176,14 +181,14 @@ void Load_Thermal_Table_Offset(void)
   FUN_RAM_01a604();
   FUN_RAM_01a637();
   bVar2 = 0xb - ((char)((0x2f < bVar2) << 7) >> 7);
-                   
+                    /* WARNING: Call to offcut address within same function */
   func_0x01a4ad();
   bVar2 = 0xb - ((char)((0x27 < bVar2) << 7) >> 7);
   FUN_RAM_01a66c();
   FUN_RAM_01a604();
   FUN_RAM_01a634();
   bVar2 = 5 - ((char)((0x6f < bVar2) << 7) >> 7);
-                   
+                    /* WARNING: Call to offcut address within same function */
   func_0x01a4c4();
   *(undefined *)(uint3)CONCAT11('\x05' - ((char)((0x67 < bVar2) << 7) >> 7),bVar2 + 0x98) =
        extraout_R7_12;
