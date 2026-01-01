@@ -250,14 +250,9 @@ void Fan_Update_SYS_TACH(void)
 // Thermal Decision Engine
 //-----------------------------------------------------------------------------
 
-#include <stdint.h>
-#include <stdbool.h>
-
-// --- Type Definitions ---
 typedef uint8_t  byte;
 typedef uint16_t ushort;
 
-// --- Global External Variables & Registers ---
 extern byte System_STA_Flags;       // Global Status (Bit 2=CPU, Bit 1=GPU, Bit 3=SYS)
 extern byte Temp_CPU_Current;
 extern byte Temp_GPU_Current;
@@ -277,7 +272,6 @@ extern byte System_Plugged_IN;      // Power state
 extern byte Manual_Mode_Toggle;     // User override switch
 extern byte TACH_Switch;            // Hardware TACH Mux
 
-// --- RAM/Registers (Direct Addressing) ---
 extern byte DAT_RAM_0094e7;         // Error Log
 extern byte DAT_RAM_000717;         // GPU/sys Lookup Buffer
 extern byte DAT_RAM_0003a0;         // Min Fan Limit Flag
@@ -286,7 +280,6 @@ extern byte DAT_RAM_003281;         // Power Management Flags
 extern byte DAT_RAM_0004e4;         // Final Target Storage 1
 extern byte DAT_RAM_0004e5;         // Final Target Storage 2
 
-// --- Diagnostic / Factory Mode Flags ---
 extern byte DAT_RAM_009596;         // Diag State A
 extern byte DAT_RAM_009597;         // Diag State B
 extern byte DAT_RAM_009598;         // Diag Step
