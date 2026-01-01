@@ -250,6 +250,119 @@ void Fan_Update_SYS_TACH(void)
 // Thermal Decision Engine
 //-----------------------------------------------------------------------------
 
+undefined Update_Fan_Mode(undefined param_1, undefined2 param_2)
+{
+    // Check if Fan Control is enabled (Bit 0 of 0x45E) 
+    // and if the configuration bit in 0x484 is valid
+    if (((DAT_RAM_00045e & 1) == 1) && ((DAT_RAM_000484 >> 4 & 1) == 0)) {
+        
+        // --- Detect and Handle Fan Mode Change ---
+        if (Last_Fan_Mode != Fan_Mode_(Table)) {
+            DAT_RAM_0092e5 = 0;
+            DAT_RAM_0092e6 = 0;
+            func_0x01bbd2();
+            Last_Fan_Mode = Fan_Mode_(Table);
+            Timer_When_Fans_Require_to_Ramp_Up = 0;
+            DAT_RAM_0009f5 = DAT_RAM_0009f5 | 0x10; // Signal a profile re-load
+        }
+
+        // --- Select Fan Mode ---
+        if ((Manual_Mode_Toggle >> 2 & 1) == 0) {
+            // Automatic Table Selection
+            if (((GPU_Related_Flag_30e >> 6 & 1) == 0) || (Fan_Mode_(Table) != 2)) {
+                
+                if (Fan_Mode_(Table) == 1) {
+                    // Load Turbo Mode
+                    FUN_RAM_01b7cc();
+                    cVar2 = -0x6e; 
+                }
+                else if (Fan_Mode_(Table) == 2) {
+                    // Load Silent Mode
+                    FUN_RAM_01b6a6();
+                    cVar2 = -0x5e;
+                }
+                else {
+                    // Default / Performance Mode
+                    FUN_RAM_01b73f();
+                    cVar2 = -0x7e;
+                }
+            }
+            else {
+                // Silent Mode GPU Override?
+                FUN_RAM_01b673();
+                cVar2 = 'v'; // 0x76
+            }
+        }
+        else {
+            // Manual Mode Toggle is active
+            FUN_RAM_01b5e8();
+            cVar2 = 'f'; // 0x66
+        }
+
+        // --- Thermal Sensor Matrix Initialization ---
+        // Clearing sensor-related RAM
+        Related_to_Sensors = 0x7c;
+        PTR_DAT_RAM_031293_RAM_009238._0_1_ = 0;
+        DAT_RAM_009236 = 0;
+        DAT_RAM_009237 = 0;
+
+        // Resetting the Temp registers
+        // FF means: Temp <= 20c
+        DAT_RAM_000eae = 0;
+        DAT_RAM_000eaf = 0;
+        DAT_RAM_000eb0 = 0xff;
+        DAT_RAM_000eb1 = 0xff;
+        DAT_RAM_000eb2 = 0xff;
+        DAT_RAM_000eb3 = 0xff;
+        DAT_RAM_000eb4 = 0xff;
+        DAT_RAM_000eb5 = 0xff;
+        DAT_RAM_000eb6 = 0xff;
+        DAT_RAM_000eb7 = 0xff;
+        DAT_RAM_000eb8 = 0xff;
+        DAT_RAM_000eb9 = 0xff;
+        DAT_RAM_000eba = 0xff;
+        DAT_RAM_000ebb = 0xff;
+        DAT_RAM_000ebc = 0xff;
+        DAT_RAM_000ebd = 0xff;
+        DAT_RAM_000ebe = 0xff;
+
+        // Sync all temps to the selected mode
+        TEMP_B63 = Fan_Mode_(Table);
+        TEMP_B64 = Fan_Mode_(Table);
+        TEMP_B65 = Fan_Mode_(Table);
+        TEMP_B66 = Fan_Mode_(Table);
+        TEMP_B67 = Fan_Mode_(Table);
+        TEMP_B68 = Fan_Mode_(Table);
+        TEMP_B69 = Fan_Mode_(Table);
+        TEMP_B6A = Fan_Mode_(Table);
+        TEMP_B6B = Fan_Mode_(Table);
+        TEMP_B6C = Fan_Mode_(Table);
+        TEMP_B6D = Fan_Mode_(Table);
+        TEMP_B6E = Fan_Mode_(Table);
+
+        func_0x01a070();    
+        thunk_FUN_RAM_0192b1();
+        FUN_RAM_013429(); 
+        
+        DAT_RAM_0004c1 = DAT_RAM_0004c1 & 0x7f; 
+        weird_batt_reg_that_sets_b48 = 0x46; 
+        FUN_RAM_01b34c(0x37, 1);
+
+        return SUB_RAM_0006a4;
+    }
+
+    // Fallback for disabled control?
+    *(undefined *)(uint3)uVar4 = param_1;
+    FUN_RAM_01bdec(bVar3 - ((char)((ushort)param_2 >> 8) - (in_PSW >> 7)));
+    Load_Thermal_Table_Offset();
+    
+    if (extraout_R7 != '\0') return 1;
+    return 0;
+}
+//-----------------------------------------------------------------------------
+// Thermal Decision Engine
+//-----------------------------------------------------------------------------
+
 typedef uint8_t  byte;
 typedef uint16_t ushort;
 
@@ -258,28 +371,28 @@ extern byte Temp_CPU_Current;
 extern byte Temp_GPU_Current;
 extern byte Fan_Step_CPU;           // Target step for CPU
 extern byte Fan_Step_GPU;           // Target step for GPU
-extern byte Fan_Step_SYS;         // SYS Fan Step
+extern byte Fan_Step_SYS;           // SYS Fan Step
 extern byte Fan_Step_CPU_Manual;    // Manual override target
 extern byte Current_CPU_Fan_Lvl;    // Current duty cycle CPU
 extern byte Current_GPU_Fan_Lvl;    // Current duty cycle GPU
 extern byte CPU_Hysteresis_Timer;
 extern byte GPU_Hysteresis_Timer;
-extern byte Fan_Mode_Table;         // 0=Perf, 1=Turbo, 2=Silent, 3=Turbo
+extern byte SYS_Fan_Hysteresis_Timer;
+extern byte Fan_Mode_Table;         // 0=Performance, 1=Turbo, 2=Silent, 3=Manual
 extern byte GPU_Fan_Duty_Bias;      // Bias offset for GPU
 extern byte CPU_Fan_Duty_Bias;      // Bias offset for CPU
 extern byte GPU_Related_Flag_30e;   // Config flag
 extern byte System_Plugged_IN;      // Power state
 extern byte Manual_Mode_Toggle;     // User override switch
 extern byte TACH_Switch;            // Hardware TACH Mux
-
 extern byte DAT_RAM_0094e7;         // Error Log
-extern byte DAT_RAM_000717;         // GPU/sys Lookup Buffer
 extern byte DAT_RAM_0003a0;         // Min Fan Limit Flag
 extern byte GPU_STATUS_359;         // GPU Power State
 extern byte DAT_RAM_003281;         // Power Management Flags
 extern byte DAT_RAM_0004e4;         // Final Target Storage 1
 extern byte DAT_RAM_0004e5;         // Final Target Storage 2
 
+// --- Diagnostic Flags? ---
 extern byte DAT_RAM_009596;         // Diag State A
 extern byte DAT_RAM_009597;         // Diag State B
 extern byte DAT_RAM_009598;         // Diag Step
@@ -305,7 +418,7 @@ short Thermal_Decision_Main(byte thermal_mask, char hysteresis_offset)
     short s_ret_val;
     byte ret_hi, ret_lo; // Return value high/low bytes
     
-    // Scratchpad variables for logic comparisons
+    // Scratchpad variables for comparisons
     byte scratch_cmp;
     byte scratch_val;
     bool is_negative;
@@ -537,7 +650,7 @@ short Thermal_Decision_Main(byte thermal_mask, char hysteresis_offset)
                 
                 if (acc_val < (byte)(scratch_val + 1)) {                  
                     scratch_cmp = 0;
-                    acc_val = DAT_RAM_000717;
+                    acc_val = SYS_Fan_Hysteresis_Timer;
                     func_0x01a8b1();
                     dptr_addr = 0x696;
                     Current_Calculation_Constant = acc_val;
@@ -551,7 +664,7 @@ short Thermal_Decision_Main(byte thermal_mask, char hysteresis_offset)
                 }
             }
             Fan_Step_SYS = 0;
-            DAT_RAM_000717 = 0;
+            SYS_Fan_Hysteresis_Timer = 0;
         } else {
             // SYS Fan Step Increment
             dptr_addr = 0x70d;
@@ -856,7 +969,7 @@ short Thermal_Decision_Main(byte thermal_mask, char hysteresis_offset)
     return (short)((ret_hi << 8) | *(byte *)(code_offset | result_code));
 
     // --- 9. Fan Table Loader Loop ---
-    // This label is jumped to from the SYS logic (LAB_RAM_019a67)
+    // This label is jumped to from the SYS Fan logic (LAB_RAM_019a67)
     LAB_DIAGNOSTIC_CHECK:
     LAB_TABLE_LOADER:
     if ((DAT_RAM_009227 & 1) || (DAT_RAM_009227 >> 4)) {
@@ -948,5 +1061,4 @@ short Thermal_Decision_Main(byte thermal_mask, char hysteresis_offset)
     }
     return (short)((ret_hi << 8) | ret_lo);
 }
-
 
