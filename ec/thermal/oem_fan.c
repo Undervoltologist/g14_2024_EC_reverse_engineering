@@ -247,7 +247,7 @@ void Fan_Update_SYS_TACH(void)
 }
 
 //-----------------------------------------------------------------------------
-// Thermal Decision Engine
+// Update Fan Mode
 //-----------------------------------------------------------------------------
 
 undefined Update_Fan_Mode(undefined param_1, undefined2 param_2)
