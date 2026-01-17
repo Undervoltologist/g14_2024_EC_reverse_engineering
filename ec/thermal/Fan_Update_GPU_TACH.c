@@ -13,12 +13,12 @@ void Fan_Update_GPU_TACH(void)
   nop();
   TACH_Switch = REG_TSWCTLR & 7;
   if ((REG_TSWCTLR & 1) != 1) {
-    FUN_RAM_01a6c7();
+    thunk_FUN_RAM_015e21();
     cVar1 = MainEC_GPU_Fan_TACH_LO;
     if (MainEC_GPU_Fan_TACH_LO == '\0') {
       cVar1 = MainEC_GPU_Fan_TACH_HI;
     }
-    if ((cVar1 == '\0') || (func_0x01a6d3(), cVar1 == '\0')) {
+    if ((cVar1 == '\0') || (FUN_RAM_01a6d3(), cVar1 == '\0')) {
       cVar1 = MainEC_GPU_Fan_TACH_LO;
       if (MainEC_GPU_Fan_TACH_LO == '\0') {
         cVar1 = MainEC_GPU_Fan_TACH_HI;
