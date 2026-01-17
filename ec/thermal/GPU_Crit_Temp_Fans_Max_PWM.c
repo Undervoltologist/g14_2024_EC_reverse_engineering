@@ -1,5 +1,5 @@
 
-void GPU_Crit_Temp_Fans_Max_PWM(void)
+void Check_if_GPU_Overheat_Decide_Fan_PWM(void)
 
 {
   char cVar1;
