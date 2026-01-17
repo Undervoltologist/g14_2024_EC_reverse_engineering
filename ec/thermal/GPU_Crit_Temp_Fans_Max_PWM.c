@@ -1,5 +1,5 @@
 
-void Fans_GPU_Crit_Temp_Max(void)
+void GPU_Crit_Temp_Fans_Max_PWM(void)
 
 {
   char cVar1;
