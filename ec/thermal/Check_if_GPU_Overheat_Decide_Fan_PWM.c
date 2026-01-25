@@ -9,9 +9,9 @@ void Check_if_GPU_Overheat_Decide_Fan_PWM(void)
   
   SUB_RAM_000695 = *(undefined *)(uint3)in_DPTR;
   FUN_RAM_01958f(GPU_Temp_44F);
-  if ((DAT_RAM_000484 >> 2 & 1) != 1) {
+  if ((Fan_Control_Toggle >> 2 & 1) != 1) {
     bVar3 = DAT_RAM_000461;
-    if (((DAT_RAM_000461 >> 2 & 1) == 1) || (bVar3 = DAT_RAM_000484, (DAT_RAM_000484 >> 3 & 1) ! = 0)
+    if (((DAT_RAM_000461 >> 2 & 1) == 1) || (bVar3 = Fan_Control_Toggle, (Fan_Control_Toggle >> 3 & 1) ! = 0)
        ) {
       cVar1 = FUN_RAM_01a8ca();
       bVar2 = Fan_CPU_PWM_Target;
