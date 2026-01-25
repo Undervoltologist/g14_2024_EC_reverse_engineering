@@ -10,9 +10,9 @@ void Update_Fan_Mode(undefined param_1,undefined2 param_2)
   ushort uVar4;
   
   uVar4 = 0x45e;
-  bVar3 = DAT_RAM_00045e;
-  if (((DAT_RAM_00045e & 1) == 1) &&
-     (uVar4 = 0x484, bVar3 = DAT_RAM_000484, (DAT_RAM_000484 >> 4 & 1) == 0)) {
+  bVar3 = Thermal_Status;
+  if (((Thermal_Status & 1) == 1) &&
+     (uVar4 = 0x484, bVar3 = Fan_Control_Toggle, (Fan_Control_Toggle >> 4 & 1) == 0)) {
     if (Fan_Mode_63A != Fan_Mode_406) {
       DAT_RAM_0092e5 = 0;
       DAT_RAM_0092e6 = 0;
