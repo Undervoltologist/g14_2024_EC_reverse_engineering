@@ -577,7 +577,7 @@ LAB_CALC_FAN_TARGET:
         Requested_GPU_Fan_Lvl = 0;
         Fan_Lvl_GPU_B71 = 0;
       }
-      if (((DAT_RAM_003281 >> 1 & 1) == 0) || ((System_Plugged_IN?._0_1_ & 1) == 1)) {
+      if (((Battery_Related >> 1 & 1) == 0) || ((System_Plugged_IN? & 1) == 1)) {
         Calc_697 = Requested_CPU_Fan_Lvl;
         if (-1 < (char)((Requested_CPU_Fan_Lvl < Fan_Lvl_CPU_B70) << 7)) {
           Calc_697 = Fan_Lvl_CPU_B70;
