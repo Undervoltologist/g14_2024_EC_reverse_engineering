@@ -1,5 +1,5 @@
 
-void Check_if_GPU_Overheat_Decide_Fan_PWM(void)
+void Max_Fans_GPU_Crit_Temp(void)
 
 {
   char cVar1;
@@ -9,10 +9,10 @@ void Check_if_GPU_Overheat_Decide_Fan_PWM(void)
   
   SUB_RAM_000695 = *(undefined *)(uint3)in_DPTR;
   FUN_RAM_01958f(GPU_Temp_44F);
-  if ((Fan_Control_Toggle >> 2 & 1) != 1) {
+  if ((Fan_Control_Toggle_484 >> 2 & 1) != 1) {
     bVar3 = DAT_RAM_000461;
-    if (((DAT_RAM_000461 >> 2 & 1) == 1) || (bVar3 = Fan_Control_Toggle, (Fan_Control_Toggle >> 3 & 1) ! = 0)
-       ) {
+    if (((DAT_RAM_000461 >> 2 & 1) == 1) ||
+       (bVar3 = Fan_Control_Toggle_484, (Fan_Control_Toggle_484 >> 3 & 1) != 0)) {
       cVar1 = FUN_RAM_01a8ca();
       bVar2 = Fan_CPU_PWM_Target;
       if (-1 < (char)((bVar3 < (byte)(cVar1 + 1U)) << 7)) {
@@ -26,7 +26,7 @@ void Check_if_GPU_Overheat_Decide_Fan_PWM(void)
       }
       REG_DCR5 = bVar3;
       cVar1 = FUN_RAM_01a8de();
-      REG_DCR6 = Fan_SYS_Target_PWM;
+      REG_DCR6 = Fan_SYS_PWM_Target;
       if (-1 < (char)((bVar3 < (byte)(cVar1 + 1U)) << 7)) {
         REG_DCR6 = REG_CTR0;
       }
