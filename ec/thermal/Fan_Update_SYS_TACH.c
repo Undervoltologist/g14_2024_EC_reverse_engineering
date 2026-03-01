@@ -4,15 +4,16 @@ void Fan_Update_SYS_TACH(void)
 {
   undefined extraout_R6;
   undefined extraout_R7;
+  uint8_t in_ACC;
   char cVar1;
   
-  FUN_RAM_015e21();
+  Init_Sensors(0x68b,in_ACC);
   nop();
   nop();
   nop();
   nop();
-  TACH_Switch = DAT_RAM_00184f & 3;
-  if ((DAT_RAM_00184f & 1) != 1) {
+  Calc_68a = TACH_Switch_SRAM & 3;
+  if ((TACH_Switch_SRAM & 1) != 1) {
     MainEC_SYS_Fan_TACH_LO = REG_F3TLRR;
     MainEC_SYS_Fan_TACH_HI = REG_F3TMRR;
     cVar1 = REG_F3TLRR;
@@ -25,20 +26,20 @@ void Fan_Update_SYS_TACH(void)
         cVar1 = MainEC_SYS_Fan_TACH_HI;
       }
       if (cVar1 == '\0') {
-        DAT_RAM_000485 = DAT_RAM_000485 & 0xfe;
+        Fan_Enabled/Disabled = Fan_Enabled/Disabled & 0xfe;
       }
       SYS_Fan_TACH_LO = 0;
       SYS_Fan_TACH_HI = 0;
     }
-    else if ((TACH_Switch >> 1 & 1) != 0) {
-      DAT_RAM_000485 = DAT_RAM_000485 | 1;
+    else if ((Calc_68a >> 1 & 1) != 0) {
+      Fan_Enabled/Disabled = Fan_Enabled/Disabled | 1;
       FUN_RAM_01a9a6(MainEC_SYS_Fan_TACH_LO,0);
       FUN_RAM_01a734();
       FUN_RAM_01a9a6();
       FUN_RAM_015dfd();
       SYS_Fan_TACH_LO = extraout_R6;
       SYS_Fan_TACH_HI = extraout_R7;
-      DAT_RAM_00184f = TACH_Switch;
+      TACH_Switch_SRAM = Calc_68a;
       return;
     }
   }
