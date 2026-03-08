@@ -3,7 +3,7 @@
     */
 /* WARNING: Removing unreachable block (RAM,0x01a0d7) */
 
-byte Read_Table_Data_By_Index(byte param_1)
+byte Read_Err_Flags?(byte param_1)
 
 {
   bool bVar1;
